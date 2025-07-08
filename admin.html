@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Online Do'kon</title>
+  <link rel="icon" type="image/png" href="android-chrome-512x512.png" class="rounded-full">
+  <link rel="mask-icon" href="android-chrome-512x512.png" color="#000000">
+  <link rel="apple-touch-icon" sizes="512x512" href="android-chrome-512x512.png" class="rounded-full">
+  <meta name="msapplication-TileImage" content="android-chrome-512x512.png">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="theme-color" content="#000000">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background: linear-gradient(-45deg, #808080, #334155, #373737, #64748b, #3e3e3e, #1e293b);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #f1f5f9;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
+    }
+    /* Custom header styles */
+    .custom-header {
+      background: rgba(30, 41, 59, 0.85);
+      box-shadow: 0 4px 24px 0 rgba(30,41,59,0.15);
+      border-bottom: 1.5px solid #33415533;
+    }
+    .custom-header .logo-text {
+      font-family: 'Montserrat', 'Inter', Arial, sans-serif;
+      letter-spacing: 1.5px;
+    }
+    .custom-header .nav-link {
+      color: #f3f4f6 !important;
+      font-weight: 600;
+      position: relative;
+      padding: 0.5rem 1.2rem;
+      border-radius: 0.7rem;
+      transition: background 0.2s, color 0.2s;
+      margin: 0 0.2rem;
+    }
+    .custom-header .nav-link.active,
+    .custom-header .nav-link:hover {
+      background: linear-gradient(90deg, #0ea5e9 60%, #f472b6 100%);
+      color: #fff !important;
+      box-shadow: 0 2px 8px #0ea5e955;
+    }
+    .custom-header .mobile-menu-btn {
+      background: #334155;
+      color: #bae6fd;
+      border-radius: 0.7rem;
+      padding: 0.6rem 1rem;
+      font-size: 1.5rem;
+      border: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .custom-header .mobile-menu-btn:active,
+    .custom-header .mobile-menu-btn:focus {
+      background: #0ea5e9;
+      color: #fff;
+    }
+    .custom-header .mobile-nav {
+      background: #232946ee;
+      box-shadow: 0 8px 32px #0008;
+      border-radius: 1rem;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(.4,0,.2,1);
+      max-height: 0;
+    }
+    .custom-header .mobile-nav.open {
+      max-height: 400px;
+      padding-bottom: 1rem;
+    }
+    .custom-header .mobile-nav .nav-link {
+      display: block;
+      margin: 0.5rem 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 0.7rem;
+      font-size: 1.1rem;
+    }
+    @media (max-width: 1024px) {
+      #product-list, #shop-product-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+    }
+    @media (max-width: 700px) {
+      #product-list, #shop-product-list {
+        grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+      }
+      .product-card { padding: 0.7rem; }
+    }
+    @media (max-width: 500px) {
+      .product-card { font-size: 1rem; padding: 0.5rem; }
+      .badge-price { font-size: 1rem; padding: 0.3rem 0.7rem; }
+      .cart-btn-modern { font-size: 1.1rem; padding: 0.5rem 1rem 0.5rem 1rem; }
+      .bg-white\/90, .bg-white\/80 { padding: 0.7rem !important; }
+      #admin-panel .max-w-xl, #admin-panel .max-w-6xl { padding: 0.5rem !important; }
+    }
+    @media (max-width: 640px) {
+      .custom-header .desktop-nav { display: none !important; }
+      .custom-header .mobile-menu-btn { display: block !important; }
+    }
+    @media (min-width: 641px) {
+      .custom-header .mobile-menu-btn { display: none !important; }
+      .custom-header .mobile-nav { display: none !important; }
+      .custom-header .desktop-nav { display: flex !important; }
+    }
+    @media (max-width: 500px) {
+      #admin-panel .max-w-xl, #admin-panel .max-w-6xl { width: 100vw !important; padding: 0.5rem !important; }
+      #admin-panel h1 { font-size: 2rem !important; }
+    }
+    @media (max-width: 500px) {
+      #admin-icon-btn { bottom: 1rem !important; right: 1rem !important; padding: 0.7rem !important; }
+    }
+    @media (max-width: 700px) {
+      #product-form textarea { min-height: 80px !important; }
+    }
+    .cart-item-box {
+      background: #232946;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      box-shadow: 0 2px 8px #0002;
+    }
+    .cart-item-title {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #bae6fd;
+      display: block;
+      margin-bottom: 0.2rem;
+      word-break: break-word;
+    }
+    .cart-item-meta {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 0.2rem;
+      word-break: break-word;
+    }
+    .cart-item-qty-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .qty-btn {
+      background: #334155;
+      color: #fff;
+      border-radius: 0.5rem;
+      border: none;
+      padding: 0.2rem 0.7rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .qty-btn:hover { background: #64748b; }
+    .remove-btn {
+      background: #ef4444;
+      color: #fff;
+      border-radius: 0.5rem;
+      border: none;
+      padding: 0.2rem 0.7rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: auto;
+      transition: background 0.2s;
+    }
+    .remove-btn:hover { background: #b91c1c; }
+  </style>
+</head>
+<body class="relative min-h-screen overflow-x-hidden">
+<!-- Header (Yangi responsiv dizayn) -->
+<header class="custom-header fixed w-full top-0 z-50">
+  <nav class="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between relative">
+    <a href="/" class="flex items-center gap-3 text-2xl font-extrabold text-cyan-400 logo-text">
+      <img src="android-chrome-512x512.png" alt="Logo" class="w-10 h-10 rounded-full border-2 border-cyan-400 shadow">
+      <span>ASICS MIZUNA</span>
+    </a>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mobil Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="desktop-nav flex gap-2 items-center">
+      <a href="/" class="nav-link">Bosh Sahifa</a>
+      <a href="/admin.html" class="nav-link active">Mahsulotlar</a>
+      <a href="/about.html" class="nav-link">Biz Haqimizda</a>
+      <a href="/contact.html" class="nav-link">Aloqa</a>
+    </div>
+    <div id="mobileMenu" class="mobile-nav absolute left-0 right-0 top-full w-full">
+      <a href="/" class="nav-link">Bosh Sahifa</a>
+      <a href="/admin.html" class="nav-link active">Mahsulotlar</a>
+      <a href="/about.html" class="nav-link">Biz Haqimizda</a>
+      <a href="/contact.html" class="nav-link">Aloqa</a>
+    </div>
+  </nav>
+</header>
+
+<!-- Dekorativ gradient doiralar -->
+<div class="pointer-events-none fixed inset-0 z-0">
+  <div class="absolute top-[-80px] left-[-80px] w-72 h-72 bg-blue-400 opacity-20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-slate-700 opacity-30 rounded-full blur-3xl"></div>
+  <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-blue-900 opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2"></div>
+</div>
+
+<!-- Admin panel icon -->
+<button id="admin-icon-btn" title="Admin Panel"
+  class="fixed bottom-8 right-8 z-50 bg-blue-700/70 hover:bg-blue-900/90 text-white p-3 rounded-full shadow-2xl transition-all text-2xl flex items-center justify-center opacity-60 hover:opacity-100 backdrop-blur-md"
+  style="box-shadow: 0 8px 32px 0 rgba(30,41,59,0.25); transition: opacity 0.3s, background 0.3s;">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3.25c-2.5 1.25-5.5 2-8.25 2.25v5.5c0 5.25 3.75 10.25 8.25 11.75 4.5-1.5 8.25-6.5 8.25-11.75v-5.5C17.5 5.25 14.5 4.5 12 3.25z" />
+  </svg>
+</button>
+
+<!-- Shop bo'limi -->
+<div id="shop-panel" class="pt-32">
+  <div class="relative z-10 container mx-auto p-2 sm:p-6">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+      <h1 class="text-3xl font-extrabold">Mahsulotlar</h1>
+      <button id="cart-btn" class="cart-btn-modern" aria-label="Savat">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count" class="cart-count-badge">0</span>
+      </button>
+    </div>
+    <div id="shop-product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+  </div>
+</div>
+
+<!-- Savat modal -->
+<div id="cart-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex items-center justify-center">
+  <div class="bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700 rounded-2xl shadow-2xl p-6 sm:p-10 w-full max-w-lg relative border border-blue-700/30">
+    <button id="close-cart" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-3xl transition-colors duration-200">&times;</button>
+    <div class="flex flex-col items-center mb-6">
+      <div class="flex items-center gap-3 mb-2">
+        <i class="fas fa-shopping-cart text-pink-400 text-3xl"></i>
+        <h2 class="text-3xl font-extrabold text-center text-pink-400 tracking-wide drop-shadow">Savat</h2>
+      </div>
+      <span class="text-blue-200 text-base">Tanlangan mahsulotlar va miqdorlar</span>
+    </div>
+    <div id="cart-items" class="space-y-4 max-h-72 overflow-y-auto pr-2 w-full"></div>
+    <div class="mt-6 flex justify-between items-center border-t border-blue-800 pt-4">
+      <span class="font-bold text-lg text-blue-200">Jami:</span>
+      <span id="cart-total" class="font-extrabold text-2xl text-blue-400">0 so'm</span>
+    </div>
+    <button id="checkout-btn" class="mt-8 w-full bg-gradient-to-r from-blue-600 to-pink-500 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform">Buyurtma berish</button>
+  </div>
+</div>
+
+<!-- Login bo'limi -->
+<div id="login-section" class="hidden relative z-10 flex flex-col items-center justify-center min-h-screen space-y-6">
+  <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-sm border border-purple-100">
+    <h2 class="text-3xl font-extrabold mb-6 text-center text-purple-700 tracking-wide">Admin Login</h2>
+    <form id="login-form" class="space-y-4">
+      <input id="admin-username" type="text" placeholder="Login" required class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+      <input id="admin-password" type="password" placeholder="Parol" required class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+      <button type="submit" class="bg-gradient-to-r from-blue-600 to-pink-500 text-white py-2 px-6 rounded-lg font-semibold hover:scale-105 transition-transform shadow-md w-full text-lg">Kirish</button>
+    </form>
+    <p id="login-error" class="text-red-500 text-center mt-3 hidden font-bold">Login yoki parol noto‘g‘ri!</p>
+  </div>
+  <button id="shop-btn" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition text-lg">Sotib olish</button>
+</div>
+
+<!-- Rasm kattalashtirish va izoh modal oynalari -->
+<style>
+  #image-modal { backdrop-filter: blur(2px); }
+  #image-modal img { box-shadow: 0 8px 32px #0008; transition: transform 0.2s; }
+  #image-modal .zoom-btn {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 1rem; z-index: 10;
+  }
+  #image-modal .zoom-btn button {
+    background: #fff; color: #222; border-radius: 9999px; padding: 0.5rem 1.2rem;
+    font-size: 1.5rem; font-weight: bold; border: none; box-shadow: 0 2px 8px #0004;
+    transition: background 0.2s, color 0.2s;
+  }
+  #image-modal .zoom-btn button:hover { background: #6366f1; color: #fff; }
+  .comment-list { max-height: 180px; overflow-y: auto; margin-bottom: 1rem; }
+  .comment-item { background: #334155; color: #fff; border-radius: 0.7rem; padding: 0.5rem 1rem; margin-bottom: 0.5rem; font-size: 1rem; }
+  .comment-author { font-weight: bold; color: #bae6fd; }
+  .comment-text { margin-left: 0.5rem; }
+</style>
+
+<!-- Rasmni kattalashtirib ko‘rsatish uchun modal -->
+<div id="image-modal" class="fixed inset-0 z-[999] bg-black/80 hidden flex items-center justify-center">
+  <span onclick="closeImageModal()" class="absolute top-6 right-10 text-white text-4xl cursor-pointer select-none">&times;</span>
+  <img id="modal-img" src="" alt="" class="max-h-[90vh] max-w-[90vw] rounded-2xl shadow-2xl border-4 border-white object-contain" style="transform: scale(1);" />
+  <div class="zoom-btn">
+    <button onclick="zoomImage(-0.2)" title="Kichiklashtirish">-</button>
+    <button onclick="zoomImage(0.2)" title="Kattalashtirish">+</button>
+    <button onclick="resetZoom()" title="Asliga qaytarish"><i class="fas fa-undo"></i></button>
+  </div>
+</div>
+
+<!-- Izohlar (komment) modal -->
+<div id="comment-modal" class="fixed inset-0 z-[999] bg-black/70 hidden flex items-center justify-center">
+  <div class="bg-white/90 rounded-2xl shadow-2xl p-8 w-full max-w-md relative border border-purple-100">
+    <button onclick="closeCommentModal()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-3xl transition-colors duration-200">&times;</button>
+    <h2 class="text-2xl font-bold mb-4 text-purple-700 tracking-wide">Izohlar</h2>
+    <div id="comment-list" class="comment-list"></div>
+    <form id="comment-form" class="flex flex-col gap-2">
+      <input id="comment-author" type="text" placeholder="Ismingiz" required class="p-2 rounded border border-purple-200" />
+      <textarea id="comment-text" placeholder="Izoh yozing..." required class="p-2 rounded border border-purple-200"></textarea>
+      <button type="submit" class="bg-gradient-to-r from-blue-600 to-pink-500 text-white py-2 rounded-lg font-semibold hover:scale-105 transition-transform shadow-md">Yuborish</button>
+    </form>
+  </div>
+</div>
+
+<!-- Admin panel bo'limi -->
+<div id="admin-panel" class="hidden pt-32">
+  <div class="relative z-10 container mx-auto p-2 sm:p-6">
+    <h1 class="text-5xl font-extrabold mb-8 text-center">Admin Panel</h1>
+    <!-- Mahsulot Qo'shish Formasi -->
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 mb-10 max-w-xl w-full mx-auto border border-purple-100">
+      <h2 class="text-2xl font-bold mb-5 text-purple-700 tracking-wide">Yangi Mahsulot Qo'shish</h2>
+      <form id="product-form" class="space-y-4">
+        <input id="name" type="text" placeholder="Mahsulot nomi" required class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+        <input id="price" type="number" placeholder="Narxi (so'm)" required class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+        <div class="flex flex-col sm:flex-row gap-2 items-center">
+          <input id="image" type="text" placeholder="Rasm URL yoki fayl tanlang" required class="flex-1 p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+          <input id="image-file" type="file" accept="image/*" class="p-2 border border-purple-200 rounded-lg" />
+        </div>
+        <input id="category" type="text" placeholder="Kategoriya nomini yozing" required class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition" />
+        <textarea id="info" placeholder="Mahsulot haqida ma'lumot (ixtiyoriy, ko'p matn bo'lishi mumkin)" class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none transition min-h-[120px] resize-y"></textarea>
+        <div id="sizes-container" class="flex flex-col gap-2">
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="text" id="size-input" placeholder="Razmer (masalan: 41 yoki M)" class="flex-1 p-2 border border-purple-200 rounded" />
+            <input type="number" id="qty-input" placeholder="Soni" min="1" class="w-24 p-2 border border-purple-200 rounded" />
+            <button type="button" id="add-size-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Qo'shish</button>
+          </div>
+          <div id="sizes-list" class="flex flex-wrap gap-2 mt-2"></div>
+        </div>
+        <button type="submit" class="bg-gradient-to-r from-blue-600 to-pink-500 text-white py-2 px-6 rounded-lg font-semibold hover:scale-105 transition-transform shadow-md w-full text-lg">Qo‘shish</button>
+      </form>
+    </div>
+    <!-- Mahsulotlar Ro'yxati -->
+    <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 max-w-6xl w-full mx-auto border border-purple-100">
+      <h2 class="text-2xl font-bold mb-5 text-purple-700 tracking-wide">Mahsulotlar</h2>
+      <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Buyurtma formasi modal -->
+<div id="order-form-modal" class="fixed inset-0 bg-black/40 z-50 hidden flex items-center justify-center">
+  <div class="bg-gradient-to-br from-blue-900 via-slate-900 to-blue-700 rounded-2xl shadow-2xl p-8 sm:p-12 w-full max-w-lg relative border border-blue-700/30">
+    <button id="close-order-form" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-3xl transition-colors duration-200">&times;</button>
+    <h2 class="text-3xl font-extrabold mb-8 text-center text-blue-300 tracking-wide drop-shadow">Buyurtma ma'lumotlari</h2>
+    <form id="order-form" class="space-y-6">
+      <div>
+        <label class="block mb-2 font-bold text-blue-200 text-lg">Ism va familiya</label>
+        <input type="text" id="order-name" class="w-full p-3 rounded-xl border border-blue-700/40 bg-slate-800 text-blue-100 placeholder:text-white focus:ring-2 focus:ring-blue-400 outline-none transition" required placeholder="Ismingiz va familiyangiz">
+      </div>
+      <div>
+        <label class="block mb-2 font-bold text-blue-200 text-lg">Telefon raqam</label>
+        <div class="flex flex-col gap-2 sm:flex-row">
+          <select id="order-phone-code" class="p-3 rounded-xl border border-blue-700/40 bg-slate-800 text-blue-100 focus:ring-2 focus:ring-blue-400 outline-none transition w-full sm:w-auto" required>
+            <option value="998">O'zbekiston (+998)</option>
+            <option value="7">Rossiya (+7)</option>
+            <option value="7-2">Qozog'iston (+7)</option>
+            <option value="374">Armaniston (+374)</option>
+            <option value="375">Belarus (+375)</option>
+            <option value="380">Ukraina (+380)</option>
+            <option value="373">Moldova (+373)</option>
+            <option value="996">Qirg'iziston (+996)</option>
+            <option value="992">Tojikiston (+992)</option>
+            <option value="993">Turkmaniston (+993)</option>
+            <option value="995">Gruziya (+995)</option>
+            <option value="994">Ozarbayjon (+994)</option>
+            <option value="90">Turkiya (+90)</option>
+            <option value="371">Latviya (+371)</option>
+            <option value="372">Estoniya (+372)</option>
+            <option value="370">Litva (+370)</option>
+            <option value="381">Serbiya (+381)</option>
+            <option value="382">Chernogoriya (+382)</option>
+            <option value="383">Kosovo (+383)</option>
+            <option value="385">Xorvatiya (+385)</option>
+            <option value="386">Sloveniya (+386)</option>
+            <option value="387">Bosniya va Gertsegovina (+387)</option>
+            <option value="389">Makedoniya (+389)</option>
+          </select>
+          <input type="tel" id="order-phone" class="p-3 rounded-xl border border-blue-700/40 bg-slate-800 text-blue-100 placeholder:text-white focus:ring-2 focus:ring-blue-400 outline-none transition w-full" required maxlength="12" pattern="[0-9]+" placeholder="Telefon raqam">
+        </div>
+      </div>
+      <div>
+        <label class="block mb-2 font-bold text-blue-200 text-lg">Manzil</label>
+        <input type="text" id="order-address" class="w-full p-3 rounded-xl border border-blue-700/40 bg-slate-800 text-blue-100 placeholder:text-white focus:ring-2 focus:ring-blue-400 outline-none transition" required placeholder="To'liq manzil">
+      </div>
+      <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-pink-500 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform">Buyurtmani yuborish</button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-black/60 mt-12 py-8">
+  <div class="container mx-auto grid md:grid-cols-3 gap-6 px-4 text-sm">
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Aloqa</h4>
+      <a href="tel:+998903093377"><i class="fas fa-phone mr-2"></i>+998-90-309-33-77</a>
+      <p><i class="fas fa-envelope mr-2"></i>info@asics.mizuna.uz</p>
+      <p><i class="fas fa-map-marker-alt mr-2"></i>Toshkent, O'zbekiston</p>
+    </div>
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Menu</h4>
+      <a href="/" class="block mb-2 hover:text-cyan-400">Bosh Sahifa</a>
+      <a href="/admin.html" class="block mb-2 hover:text-cyan-400">Mahsulotlar</a>
+      <a href="/about.html" class="block mb-2 hover:text-cyan-400">Biz Haqimizda</a>
+      <a href="/contact.html" class="block hover:text-cyan-400">Aloqa</a>
+    </div>
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Ijtimoiy tarmoqlar</h4>
+      <div class="flex gap-4 mt-2">
+        <a href="#" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-cyan-600 transition">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.instagram.com/asics_mizuno.uz" target="_blank" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-pink-600 transition">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-blue-500 transition">
+          <i class="fab fa-telegram"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="text-center text-gray-400 mt-6 text-xs">
+    © 2025 ASICS MIZUNA. Barcha huquqlar himoyalangan.
+  </p>
+</footer>
+
+<style>
+  #order-form-modal .bg-gradient-to-br {
+    box-shadow: 0 12px 36px 0 rgba(30,41,59,0.35) !important;
+  }
+  #order-form input, #order-form select {
+    background: #2c2c2c !important;
+    color: #bae6fd !important;
+    border: 1.5px solid #27292d !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  #order-form input:focus, #order-form select:focus {
+    border-color: #525252 !important;
+    box-shadow: 0 0 0 2px #00000044;
+  }
+  #order-form input::placeholder {
+    color: #2b2b2b !important;
+    opacity: 1;
+  }
+  #order-form label {
+    letter-spacing: 0.5px;
+  }
+  @media (max-width: 500px) {
+    #order-form-modal .bg-gradient-to-br {
+      padding: 1.2rem 0.5rem !important;
+    }
+    #order-form-modal h2 { font-size: 1.3rem; }
+  }
+</style>
+
+<script>
+// Custom mobile menu toggle for new header
+const menuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+  if (mobileMenu.classList.contains('open')) {
+    mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+  } else {
+    mobileMenu.style.maxHeight = '0';
+  }
+});
+document.querySelectorAll('.mobile-nav .nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    mobileMenu.style.maxHeight = '0';
+  });
+});
+
+// Rasm yuklash (file inputdan base64)
+document.addEventListener('DOMContentLoaded', function() {
+  const imageInput = document.getElementById('image');
+  const imageFileInput = document.getElementById('image-file');
+  if (imageFileInput) {
+    imageFileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        imageInput.value = evt.target.result; // base64 url
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
+
+// --- Custom size/category logic ---
+let sizesArr = [];
+const sizeInput = document.getElementById('size-input');
+const qtyInput = document.getElementById('qty-input');
+const addSizeBtn = document.getElementById('add-size-btn');
+const sizesListDiv = document.getElementById('sizes-list');
+
+function renderSizesList() {
+  sizesListDiv.innerHTML = '';
+  sizesArr.forEach((s, idx) => {
+    sizesListDiv.innerHTML += `<span class="bg-blue-600 text-white px-3 py-1 rounded-full flex items-center gap-2 mb-1">
+      ${s.size} (${s.qty} ta)
+      <button type="button" onclick="removeSize(${idx})" class="ml-2 text-white hover:text-red-400">&times;</button>
+    </span>`;
+  });
+}
+window.removeSize = function(idx) {
+  sizesArr.splice(idx, 1);
+  renderSizesList();
+};
+
+addSizeBtn.onclick = function() {
+  const size = sizeInput.value.trim();
+  const qty = Number(qtyInput.value);
+  if (!size || !qty || qty < 1) {
+    alert("Razmer va sonini to'g'ri kiriting!");
+    return;
+  }
+  sizesArr.push({ size, qty });
+  renderSizesList();
+  sizeInput.value = '';
+  qtyInput.value = '';
+};
+
+// Modal funksiyalari (zoom va comment)
+let currentZoom = 1;
+function openImageModal(src, alt) {
+  const modal = document.getElementById('image-modal');
+  const img = document.getElementById('modal-img');
+  img.src = src;
+  img.alt = alt;
+  currentZoom = 1;
+  img.style.transform = 'scale(1)';
+  modal.classList.remove('hidden');
+  img.onwheel = function(e) {
+    e.preventDefault();
+    if (e.deltaY < 0) zoomImage(0.1);
+    else zoomImage(-0.1);
+  };
+  img.onmousedown = function(e) {
+    e.preventDefault();
+    let startX = e.clientX, startY = e.clientY;
+    let startLeft = img.offsetLeft, startTop = img.offsetTop;
+    function move(ev) {
+      img.style.position = 'relative';
+      img.style.left = (ev.clientX - startX) + 'px';
+      img.style.top = (ev.clientY - startY) + 'px';
+    }
+    function up() {
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  };
+}
+function closeImageModal() {
+  document.getElementById('image-modal').classList.add('hidden');
+  const img = document.getElementById('modal-img');
+  img.style.left = '';
+  img.style.top = '';
+  img.style.position = '';
+}
+function zoomImage(delta) {
+  const img = document.getElementById('modal-img');
+  currentZoom = Math.max(0.2, Math.min(5, currentZoom + delta));
+  img.style.transform = `scale(${currentZoom})`;
+}
+function resetZoom() {
+  currentZoom = 1;
+  document.getElementById('modal-img').style.transform = 'scale(1)';
+}
+
+// Izohlar (komment) funksiyalari
+let currentCommentProduct = null;
+function openCommentModal(productIndex) {
+  currentCommentProduct = productIndex;
+  document.getElementById('comment-modal').classList.remove('hidden');
+  renderComments();
+}
+function closeCommentModal() {
+  document.getElementById('comment-modal').classList.add('hidden');
+}
+function getComments() {
+  return JSON.parse(localStorage.getItem('comments') || '{}');
+}
+function saveComments(comments) {
+  localStorage.setItem('comments', JSON.stringify(comments));
+}
+function renderComments() {
+  const comments = getComments();
+  const productKey = 'p' + currentCommentProduct;
+  const list = comments[productKey] || [];
+  const commentList = document.getElementById('comment-list');
+  commentList.innerHTML = '';
+  if (list.length === 0) {
+    commentList.innerHTML = '<div class="text-gray-400 text-center">Izohlar yo‘q</div>';
+  } else {
+    list.forEach(c => {
+      commentList.innerHTML += `<div class="comment-item"><span class="comment-author">${c.author}:</span><span class="comment-text">${c.text}</span></div>`;
+    });
+  }
+}
+document.getElementById('comment-form').onsubmit = function(e) {
+  e.preventDefault();
+  const author = document.getElementById('comment-author').value.trim();
+  const text = document.getElementById('comment-text').value.trim();
+  if (!author || !text) return;
+  const comments = getComments();
+  const productKey = 'p' + currentCommentProduct;
+  if (!comments[productKey]) comments[productKey] = [];
+  comments[productKey].push({ author, text });
+  saveComments(comments);
+  document.getElementById('comment-author').value = '';
+  document.getElementById('comment-text').value = '';
+  renderComments();
+};
+
+// --- Mahsulotlar ro'yxati va shop ro'yxatida rasm va izoh tugmasi qo'shish ---
+function renderProducts() {
+  if (!productList) return;
+  productList.innerHTML = '';
+  if (products.length === 0) {
+    productList.innerHTML = `<div class="col-span-full text-center text-gray-400 text-lg py-10">Mahsulotlar yo‘q</div>`;
+    return;
+  }
+  products.forEach((product, index) => {
+    let sizesText = '';
+    let totalQty = 0;
+    if (product.sizes && product.sizes.length > 0) {
+      sizesText = product.sizes.map(s => `${s.size} (${s.qty} ta)`).join(', ');
+      totalQty = product.sizes.reduce((sum, s) => sum + Number(s.qty), 0);
+    }
+    const isOut = totalQty <= 0;
+    const outBadge = isOut ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">Tugagan</span>` : '';
+    productList.innerHTML += `
+      <div class="product-card flex flex-col bg-white border border-purple-100 rounded-2xl shadow-lg p-4 relative group">
+        <div class="relative">
+          <img src="${product.image}" alt="${product.name}" class="h-40 object-cover rounded-xl shadow mb-3 w-full cursor-zoom-in"
+            onclick="openImageModal('${product.image.replace(/'/g, "\\'")}', '${product.name.replace(/'/g, "\\'")}')" />
+          <button onclick="openCommentModal(${index})" title="Izohlar" class="absolute bottom-2 right-2 bg-blue-600/80 hover:bg-pink-500 text-white rounded-full p-2 shadow-lg text-lg z-10"><i class="fa fa-comment"></i></button>
+        </div>
+        <div class="badge-price absolute top-3 left-3">${product.price} so'm</div>
+        ${outBadge}
+        <h3 class="text-lg font-bold text-purple-700 mb-1">${product.name}</h3>
+        <p class="text-sm text-gray-600 mb-1">${product.category}</p>
+        <p class="text-xs text-gray-500 mb-2">Razmerlar: ${sizesText}</p>
+        <p class="text-xs text-gray-500 mb-2">Jami: ${totalQty} ta</p>
+        ${product.info && product.info.trim() ? `<div class="text-xs text-gray-400 mb-2 break-words whitespace-pre-line max-h-32 overflow-y-auto border border-purple-200 rounded p-2 bg-slate-800/60">${product.info}</div>` : ''}
+        <div class="flex gap-2 mt-auto opacity-0 group-hover:opacity-100 transition">
+          <button onclick="editProduct(${index})" title="Tahrirlash" class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow transition">Tahrirlash</button>
+          <button onclick="deleteProduct(${index})" title="O‘chirish" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow transition">O‘chirish</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function renderShopProducts() {
+  if (!shopProductList) return;
+  shopProductList.innerHTML = '';
+  if (products.length === 0) {
+    shopProductList.innerHTML = `<div class="col-span-full text-center text-gray-400 text-lg py-10">Mahsulotlar yo‘q</div>`;
+    return;
+  }
+  products.forEach((product, index) => {
+    let totalQty = product.sizes.reduce((sum, s) => sum + Number(s.qty), 0);
+    const isOut = totalQty <= 0;
+    let sizeSelect = '';
+    if (product.sizes && product.sizes.length > 0) {
+      sizeSelect = `
+        <select id="size-select-${index}" class="w-full p-2 border rounded-lg mt-2 bg-gray-50 focus:ring-2 focus:ring-green-400 outline-none transition" required ${isOut ? 'disabled' : ''} onchange="updateSizeQtyInfo(${index})">
+          <option value="">Razmer tanlang</option>
+          ${product.sizes.map(s => `<option value="${s.size}">${s.size} (${s.qty} ta)</option>`).join('')}
+        </select>
+        <div id="size-qty-info-${index}" class="text-xs text-gray-500 mt-1"></div>
+      `;
+    }
+    shopProductList.innerHTML += `
+      <div class="product-card flex flex-col bg-white border border-green-100 rounded-2xl shadow-lg p-4 relative group">
+        <div class="relative">
+          <img src="${product.image}" alt="${product.name}" class="h-40 object-cover rounded-xl shadow mb-3 w-full cursor-zoom-in"
+            onclick="openImageModal('${product.image.replace(/'/g, "\\'")}', '${product.name.replace(/'/g, "\\'")}')" />
+          <button onclick="openCommentModal(${index})" title="Izohlar" class="absolute bottom-2 right-2 bg-blue-600/80 hover:bg-pink-500 text-white rounded-full p-2 shadow-lg text-lg z-10"><i class="fa fa-comment"></i></button>
+        </div>
+        <div class="badge-price absolute top-3 left-3">${product.price} so'm</div>
+        ${isOut ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">Tugagan</span>` : ''}
+        <h3 class="text-lg font-bold text-green-700 mb-1">${product.name}</h3>
+        <p class="text-sm text-gray-600 mb-1">${product.category}</p>
+        <p class="text-xs text-gray-500 mb-2">Razmerlar: ${product.sizes.map(s => `${s.size} (${s.qty} ta)`).join(', ')}</p>
+        ${product.info && product.info.trim() ? `<div class="text-xs text-gray-400 mb-2 break-words whitespace-pre-line max-h-32 overflow-y-auto border border-green-200 rounded p-2 bg-slate-800/60">${product.info}</div>` : ''}
+        ${sizeSelect}
+        ${isOut
+          ? `<button disabled class="bg-gray-300 text-white px-3 py-2 rounded shadow mt-auto w-full font-semibold cursor-not-allowed">Tugagan</button>`
+          : `<button onclick="addToCart(${index})" class="bg-green-500 text-white px-3 py-2 rounded shadow hover:bg-green-600 transition mt-auto w-full font-semibold">Savatga qo‘shish</button>`
+        }
+      </div>
+    `;
+  });
+}
+
+// Admin login funksiyasi
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "12345";
+
+const loginSection = document.getElementById('login-section');
+const adminPanel = document.getElementById('admin-panel');
+const loginForm = document.getElementById('login-form');
+const loginError = document.getElementById('login-error');
+const shopBtn = document.getElementById('shop-btn');
+const shopPanel = document.getElementById('shop-panel');
+const shopProductList = document.getElementById('shop-product-list');
+const cartBtn = document.getElementById('cart-btn');
+const cartModal = document.getElementById('cart-modal');
+const closeCart = document.getElementById('close-cart');
+const cartItems = document.getElementById('cart-items');
+const cartTotal = document.getElementById('cart-total');
+const cartCount = document.getElementById('cart-count');
+const checkoutBtn = document.getElementById('checkout-btn');
+const adminIconBtn = document.getElementById('admin-icon-btn');
+const orderFormModal = document.getElementById('order-form-modal');
+const closeOrderForm = document.getElementById('close-order-form');
+const orderForm = document.getElementById('order-form');
+let products = JSON.parse(localStorage.getItem('products')) || [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Admin icon bosilganda login oynasini ko'rsatish
+adminIconBtn.onclick = function() {
+  shopPanel.classList.add('hidden');
+  loginSection.classList.remove('hidden');
+};
+
+// Admin login
+loginForm.onsubmit = function(e) {
+  e.preventDefault();
+  const username = document.getElementById('admin-username').value;
+  const password = document.getElementById('admin-password').value;
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    loginSection.classList.add('hidden');
+    adminPanel.classList.remove('hidden');
+    renderProducts();
+  } else {
+    loginError.classList.remove('hidden');
+  }
+};
+
+// Sotib olish bo'limi (admin paneldan shopga qaytish)
+shopBtn.onclick = function() {
+  loginSection.classList.add('hidden');
+  adminPanel.classList.add('hidden');
+  shopPanel.classList.remove('hidden');
+  renderShopProducts();
+  updateCartCount();
+};
+
+// Admin panel funksiyalari
+const form = document.getElementById('product-form');
+const productList = document.getElementById('product-list');
+const imageFileInput = document.getElementById('image-file');
+
+function saveProducts() {
+  localStorage.setItem('products', JSON.stringify(products));
+}
+
+if (form) {
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    if (sizesArr.length === 0) {
+      alert("Iltimos, kamida bitta razmer va sonini kiriting!");
+      return;
+    }
+    const newProduct = {
+      name: form.name.value,
+      price: Number(form.price.value),
+      image: form.image.value,
+      category: form.category.value,
+      info: form.info.value,
+      sizes: [...sizesArr]
+    };
+    products.push(newProduct);
+    saveProducts();
+    renderProducts();
+    renderShopProducts();
+    form.reset();
+    sizesArr = [];
+    renderSizesList();
+    if (imageFileInput) imageFileInput.value = '';
+  };
+}
+
+window.deleteProduct = function(index) {
+  if (confirm('Haqiqatan ham o‘chirmoqchimisiz')) {
+    products.splice(index, 1);
+    saveProducts();
+    renderProducts();
+    renderShopProducts();
+  }
+}
+
+window.editProduct = function(index) {
+  const p = products[index];
+  form.name.value = p.name;
+  form.price.value = p.price;
+  form.image.value = p.image;
+  form.category.value = p.category;
+  form.info.value = p.info || '';
+  sizesArr = p.sizes.map(s => ({ ...s }));
+  renderSizesList();
+  products.splice(index, 1);
+  saveProducts();
+  renderProducts();
+  renderShopProducts();
+}
+
+// Shop (sotib olish) funksiyalari
+window.updateSizeQtyInfo = function(index) {
+  const select = document.getElementById('size-select-' + index);
+  const infoDiv = document.getElementById('size-qty-info-' + index);
+  const product = products[index];
+  const selected = select.value;
+  if (!selected) {
+    infoDiv.textContent = '';
+    return;
+  }
+  const sizeObj = product.sizes.find(s => s.size === selected);
+  if (sizeObj) {
+    infoDiv.textContent = `Qolgan: ${sizeObj.qty} ta`;
+  }
+};
+
+window.addToCart = function(index) {
+  const product = products[index];
+  let selectedSize = '';
+  let sizeObj = null;
+  if (product.sizes && product.sizes.length > 0) {
+    const select = document.getElementById('size-select-' + index);
+    selectedSize = select ? select.value : '';
+    if (!selectedSize) {
+      select.classList.add('border-red-500');
+      select.focus();
+      return;
+    } else {
+      select.classList.remove('border-red-500');
+    }
+    sizeObj = product.sizes.find(s => s.size === selectedSize);
+    if (!sizeObj || sizeObj.qty <= 0) {
+      alert("Bu razmer tugagan!");
+      return;
+    }
+  }
+  const cartItem = cart.find(item => item.name === product.name && item.price === product.price && item.size === selectedSize);
+  if (cartItem) {
+    if (cartItem.count < sizeObj.qty) {
+      cartItem.count += 1;
+    } else {
+      alert("Bu razmerdan ko‘proq mavjud emas!");
+      return;
+    }
+  } else {
+    cart.push({ ...product, count: 1, size: selectedSize });
+  }
+  saveCart();
+  updateCartCount();
+};
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateCartCount() {
+  cartCount.textContent = cart.reduce((sum, item) => sum + item.count, 0);
+}
+
+// Savat modal oynasi
+cartBtn.onclick = function() {
+  renderCart();
+  cartModal.classList.remove('hidden');
+};
+closeCart.onclick = function() {
+  cartModal.classList.add('hidden');
+};
+
+function renderCart() {
+  cartItems.innerHTML = '';
+  let total = 0;
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<p class="text-blue-200 text-center">Savat bo‘sh</p>';
+  } else {
+    cart.forEach((item, idx) => {
+      total += item.price * item.count;
+      cartItems.innerHTML += `
+        <div class="cart-item-box">
+          <div class="cart-item-header">
+            <span class="cart-item-title">${item.name}</span>
+            <span class="cart-item-meta">${item.category}${item.size ? ' | ' + item.size : ''}</span>
+          </div>
+          <div class="cart-item-meta">${item.price} so'm x ${item.count} = <span class="font-bold text-blue-300">${item.price * item.count} so'm</span></div>
+          <div class="cart-item-qty-row">
+            <button onclick="decreaseCart(${idx})" class="qty-btn">-</button>
+            <span class="text-lg font-bold text-blue-200">${item.count}</span>
+            <button onclick="increaseCart(${idx})" class="qty-btn">+</button>
+            <button onclick="removeFromCart(${idx})" class="remove-btn">O‘chirish</button>
+          </div>
+        </div>
+      `;
+    });
+  }
+  cartTotal.textContent = total + " so'm";
+}
+
+window.increaseCart = function(idx) {
+  const item = cart[idx];
+  const product = products.find(p => p.name === item.name && p.price === item.price);
+  const sizeObj = product && product.sizes.find(s => s.size === item.size);
+  if (item.count < (sizeObj ? sizeObj.qty : 0)) {
+    cart[idx].count += 1;
+    saveCart();
+    renderCart();
+    updateCartCount();
+  } else {
+    alert("Bu razmerdan ko‘proq mavjud emas!");
+  }
+};
+window.decreaseCart = function(idx) {
+  if (cart[idx].count > 1) {
+    cart[idx].count -= 1;
+  } else {
+    cart.splice(idx, 1);
+  }
+  saveCart();
+  renderCart();
+  updateCartCount();
+};
+window.removeFromCart = function(idx) {
+  cart.splice(idx, 1);
+  saveCart();
+  renderCart();
+  updateCartCount();
+};
+
+// Buyurtma formasi modal ochish
+checkoutBtn.onclick = function() {
+  cartModal.classList.add('hidden');
+  orderFormModal.classList.remove('hidden');
+};
+
+closeOrderForm.onclick = function() {
+  orderFormModal.classList.add('hidden');
+};
+
+// Buyurtma yuborish
+orderForm.onsubmit = function(e) {
+  e.preventDefault();
+  const name = document.getElementById('order-name').value.trim();
+  const phoneCode = document.getElementById('order-phone-code').value;
+  const phone = document.getElementById('order-phone').value.trim();
+  const address = document.getElementById('order-address').value.trim();
+
+  if (!name || !phone || !address) {
+    alert("Barcha maydonlarni to'ldiring!");
+    return;
+  }
+  if (!/^[0-9]{6,12}$/.test(phone)) {
+    alert("Telefon raqamni to'g'ri kiriting!");
+    return;
+  }
+
+  alert(
+    `Buyurtma yuborildi!\n\nIsm: ${name}\nTelefon: +${phoneCode} ${phone}\nManzil: ${address}\nMahsulotlar soni: ${cart.reduce((s, i) => s + i.count, 0)}`
+  );
+
+  cart.forEach(item => {
+    const product = products.find(p => p.name === item.name && p.price === item.price);
+    if (product) {
+      const sizeObj = product.sizes.find(s => s.size === item.size);
+      if (sizeObj) {
+        sizeObj.qty -= item.count;
+        if (sizeObj.qty < 0) sizeObj.qty = 0;
+      }
+    }
+  });
+  saveProducts();
+  cart = [];
+  saveCart();
+  renderProducts();
+  renderShopProducts();
+  renderCart();
+  updateCartCount();
+  orderFormModal.classList.add('hidden');
+};
+
+// Sahifa yuklanganda mahsulotlar ro'yxatini ko'rsatish va savat sonini yangilash
+renderShopProducts();
+updateCartCount();
+</script>
+</body>
+</html>

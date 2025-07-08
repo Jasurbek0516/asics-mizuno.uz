@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Biz Haqimizda - ASICS MIZUNA</title>
+  <link rel="icon" href="android-chrome-512x512.png"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(-45deg, #2f2f2f, #3e3e3e, #4b5563, #6b7280, #374151, #1f2937);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      font-family: 'Inter', sans-serif;
+      color: #e2e8f0;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 100%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 0%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .nav-link, .menu-link {
+      position: relative;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-link::after, .menu-link::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -2px;
+      height: 2px;
+      background: linear-gradient(90deg, #00eaff, #fff700);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+      transform-origin: left;
+    }
+    .nav-link:hover::after, .menu-link:hover::after {
+      transform: scaleX(1);
+    }
+
+    .mobile-menu {
+      transition: max-height 0.4s ease;
+      overflow: hidden;
+      max-height: 0;
+    }
+    .mobile-menu.open {
+      max-height: 400px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="fixed w-full top-0 z-50 bg-black/50 backdrop-blur-md shadow-md">
+  <nav class="container mx-auto flex flex-wrap items-center justify-between px-4 py-3">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 text-xl font-extrabold text-cyan-400">
+      <img src="android-chrome-512x512.png" alt="ASICS MIZUNA logotipi" class="w-9 h-9 rounded-full shadow-md">
+      <span class="hover:text-cyan-300">ASICS MIZUNA</span>
+    </a>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex gap-6 items-center">
+      <a href="/" class="nav-link hover:text-cyan-300">Bosh Sahifa</a>
+      <a href="/admin.html" class="nav-link hover:text-cyan-300">Mahsulotlar</a>
+      <a href="/about.html" class="nav-link hover:text-cyan-300">Biz Haqimizda</a>
+      <a href="/contact.html" class="nav-link hover:text-cyan-300">Aloqa</a>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuBtn" class="md:hidden text-cyan-400 hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded" aria-label="Mobil menyuni ochish">
+      <i class="fas fa-bars text-2xl"></i>
+    </button>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu md:hidden w-full mt-3 rounded-lg bg-black/90 backdrop-blur-lg shadow-lg">
+      <div class="flex flex-col px-4 py-3 space-y-2">
+        <a href="/" class="menu-link hover:text-cyan-300">Bosh Sahifa</a>
+        <a href="/admin.html" class="menu-link hover:text-cyan-300">Mahsulotlar</a>
+        <a href="/about.html" class="menu-link hover:text-cyan-300">Biz Haqimizda</a>
+        <a href="/contact.html" class="menu-link hover:text-cyan-300">Aloqa</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+<!-- Main Content -->
+<main class="pt-28 pb-12">
+  <section class="container mx-auto px-6">
+    <h1 class="text-4xl md:text-5xl font-bold text-center mb-12 text-white">Biz Haqimizda</h1>
+    <div class="grid md:grid-cols-2 gap-10">
+      <div class="space-y-6">
+        <div class="card p-6 rounded-xl">
+          <h2 class="text-2xl font-bold text-cyan-400 mb-4">ASICS MIZUNA</h2>
+          <p>
+            ASICS MIZUNA - O'zbekistondagi eng yirik sport kiyim va poyabzal do'koni. Biz 2020-yildan buyon mijozlarga yuqori sifatli brend mahsulotlarini taqdim etamiz.
+          </p>
+        </div>
+        <div class="card p-6 rounded-xl">
+          <h3 class="text-xl font-bold text-cyan-400 mb-4">Afzalliklarimiz</h3>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Original mahsulotlar</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Qulay narxlar</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Professional maslahatlar</li>
+            <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Tez yetkazib berish</li>
+          </ul>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <div class="card p-6 rounded-xl">
+          <iframe class="w-full rounded-xl" height="250" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d5185.711639914104!2d65.37992072100774!3d40.10541500992057!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sru!2s!4v1749814338434!5m2!1sru!2s" style="border:0;" allowfullscreen="" loading="lazy" aria-label="Do'kon manzili xaritasi"></iframe>
+          <h3 class="text-xl font-bold text-cyan-400 mt-4">Do'kon manzili</h3>
+          <p class="mt-2"><i class="fas fa-map-marker-alt text-red-400 mr-2"></i>Toshkent, Chilonzor tumani</p>
+          <p><i class="fas fa-subway text-blue-400 mr-2"></i>Mo'ljal: Chilonzor metro</p>
+          <p><i class="fas fa-clock text-green-400 mr-2"></i>Ish vaqti: 09:00 - 20:00</p>
+          <p><i class="fas fa-phone text-yellow-400 mr-2"></i>+998 90 123 45 67</p>
+        </div>
+        <div class="card p-6 rounded-xl">
+          <h3 class="text-xl font-bold text-cyan-400 mb-4">Ish vaqti</h3>
+          <ul class="space-y-2">
+            <li class="flex justify-between"><span>Dushanba - Shanba:</span><span>09:00 - 20:00</span></li>
+            <li class="flex justify-between"><span>Yakshanba:</span><span>10:00 - 18:00</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="bg-black/60 mt-12 py-8">
+  <div class="container mx-auto grid md:grid-cols-3 gap-6 px-4 text-sm">
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Aloqa</h4>
+      <a href="tel:+998903093377"><i class="fas fa-phone mr-2"></i>+998-90-309-33-77</a>
+      <p><i class="fas fa-envelope mr-2"></i>info@asics.mizuna.uz</p>
+      <p><i class="fas fa-map-marker-alt mr-2"></i>Toshkent, O'zbekiston</p>
+    </div>
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Menu</h4>
+      <a href="/" class="block mb-2 hover:text-cyan-400">Bosh Sahifa</a>
+      <a href="/admin.html" class="block mb-2 hover:text-cyan-400">Mahsulotlar</a>
+      <a href="/about.html" class="block mb-2 hover:text-cyan-400">Biz Haqimizda</a>
+      <a href="/contact.html" class="block hover:text-cyan-400">Aloqa</a>
+    </div>
+    <div>
+      <h4 class="text-lg font-semibold mb-3">Ijtimoiy tarmoqlar</h4>
+      <div class="flex gap-4 mt-2">
+        <a href="#" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-cyan-600 transition">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.instagram.com/asics_mizuno.uz" target="_blank" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-pink-600 transition">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full hover:bg-blue-500 transition">
+          <i class="fab fa-telegram"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="text-center text-gray-400 mt-6 text-xs">
+    © 2025 ASICS MIZUNA. Barcha huquqlar himoyalangan.
+  </p>
+</footer>
+
+<script>
+  // Mobil menyu toggle
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>
